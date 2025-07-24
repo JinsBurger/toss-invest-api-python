@@ -163,15 +163,15 @@ class TossInvestWorker(threading.Thread):
                         else: #subscribe
                             self.stomper.id_subscribe_status[receipt_id] = True
                     else:
-                        print("[!!] Unexpected Packet: ", data)
+                        logging.debug("[!!] Unexpected Packet: ", data)
                         
 
                 except websockets.exceptions.ConnectionClosed as e:
-                    print("TossInvestWorker Closed", e)
+                    logging.debug("TossInvestWorker Closed", e)
                     break
 
                 except Exception as e:
-                    print("TossInvestWorker: ", e)
+                    logging.debug("TossInvestWorker: ", e)
                     break
 
 
@@ -186,7 +186,6 @@ def get_connection_headers():
     url = "https://wts-api.tossinvest.com/api/v3/init"
     device_id = "WTS-"+hashlib.md5(''.join([random.choice(string.ascii_letters) for _ in range(35)]).encode()).hexdigest()
     connection_id = str(uuid.uuid4())
-    print(device_id)
     headers = {
         "accept": "*/*",
         "accept-encoding": "gzip, deflate, br, zstd",
