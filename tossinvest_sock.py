@@ -208,7 +208,7 @@ def get_connection_headers():
     return connection_id, device_id, r.cookies["UTK"]
 
 
-def connect_toss(handler) -> TossInvestWorker:
+def connect_toss(handler, ws_url=TOSSINVEST_WS_URL) -> TossInvestWorker:
     """Create and connect Toss invest websockets
         Parameters
             - handler function
@@ -218,7 +218,7 @@ def connect_toss(handler) -> TossInvestWorker:
 
     conn_id, dev_id, utk_id = get_connection_headers()
 
-    worker = TossInvestWorker(TOSSINVEST_WS_URL, conn_id, dev_id, utk_id, handler)
+    worker = TossInvestWorker(ws_url, conn_id, dev_id, utk_id, handler)
     worker.start()
     worker.wait_for_connection()
     return worker
