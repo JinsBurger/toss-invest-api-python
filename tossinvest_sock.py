@@ -16,7 +16,7 @@ import asyncio
 class Trade:
     code: str
     dt: str
-    session: Literal["DAY", "NIGHT"]
+    session: str
     currency: str
     base: float
     close: float
@@ -87,7 +87,7 @@ class TossInvestWorker(threading.Thread):
         asyncio.run(self.ws_recv_handler())
 
     def wait_for_connection(self):
-        logging.debug("Wait for initializing connection from Toss Websocket")
+        print("Wait for initializing connection from Toss Websocket")
         while not self.is_initialized:
             time.sleep(3)
         
@@ -132,7 +132,6 @@ class TossInvestWorker(threading.Thread):
                 "cumulativeAmount": 506617,
                 "cumulativeAmountKrw": 698675504.7
             }
-    '''
         """
 
         async with websockets.connect(self.ws_url, subprotocols=["v12.stomp", "v11.stomp", "v10.stomp"], ping_interval=500) as ws:
@@ -140,7 +139,7 @@ class TossInvestWorker(threading.Thread):
             #Initialize Connection
             await ws.send(self.stomper.connect())
             assert("CONNECTED" in await ws.recv())
-            logging.debug("Success to connect TossInvest websocket")
+            print("Success to connect TossInvest websocket")
             self.ws = ws
             self.is_initialized = True
 
@@ -163,15 +162,15 @@ class TossInvestWorker(threading.Thread):
                         else: #subscribe
                             self.stomper.id_subscribe_status[receipt_id] = True
                     else:
-                        logging.debug("[!!] Unexpected Packet: ", data)
+                        print("[!!] Unexpected Packet: ", data)
                         
 
                 except websockets.exceptions.ConnectionClosed as e:
-                    logging.debug("TossInvestWorker Closed", e)
+                    print("TossInvestWorker Closed", e)
                     break
 
                 except Exception as e:
-                    logging.debug("TossInvestWorker: ", e)
+                    print("TossInvestWorker: ", e)
                     break
 
 
